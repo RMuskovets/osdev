@@ -2,14 +2,13 @@
 An operating system based on <a href = "http://www.osdever.net/bkerndev/Docs/title.htm"> Brans' Kernel Development Tutorial</a>  
 <a href = "https://www.youtube.com/watch?v=846d4m0wHQo"> Click me to see the video demo! </a>  
 
-Futuer goals:
+Future goals:
 1. Userspace, Port Newlib, Multi-process, multi-thread, IPC, write syscalls, etc(process related stuff)
 2. Implement a hobby level TCP/IP stack(Ethernet/ARP/DHCP/IP/UDP/TCP with congestion control and everything..)
 3. Graphical User Interface(C/S GUI Server, Composite via IPC, now the GUI is in kernel)
 4. Write three GUI user apps(Shell, TCP ChatRoom, Text Editor)
 
 # Screenshots  
-![Alt text](/os_screenshots/ss15.png?raw=true "ss15")
 ![Alt text](/os_screenshots/ss12.png?raw=true "ss12")
 ![Alt text](/os_screenshots/ss0.png?raw=true "ss0")
 ![Alt text](/os_screenshots/ss1.png?raw=true "ss1")
@@ -17,8 +16,8 @@ Futuer goals:
 
 
 
-# How to run and test Cool OS kernel
-## Preparation(Ubuntu14.04 is a recommended environment for compiling and running simpleos)
+# How to run and test kernel
+## Preparation(Ubuntu14.04 is a recommended environment for compiling and running os)
 Simpleos use elf-i686-gcc as cross-compiler, please build the cross compiler on your system first.  
 Remember to replace "CC=i686-pc-btos-gcc" in Makefile with your cross compiler.
 
