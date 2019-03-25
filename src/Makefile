@@ -23,7 +23,7 @@ ASM_SOURCES=$(ROOT_DIR)/entry.asm $(DT_DIR)/idt_helper.asm $(DT_DIR)/gdt_helper.
 
 # Setup object files
 OBJECTS=$(SOURCES:.c=.o) $(ASM_SOURCES:.asm=.o)
-EXECUTABLE=../os_kernel
+EXECUTABLE=../os_kernel_shell
 
 # Setup all source directories
 KERNEL_DIR=kernel
