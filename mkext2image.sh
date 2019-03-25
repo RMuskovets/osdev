@@ -1,8 +1,8 @@
 #!/bin/bash
 #dd if=<(yes $'\01' | tr -d "\n") of=ext2_hda.img bs=1k count=100000
 dd if=/dev/zero of=ext2_hda.img bs=1k count=100000 > /dev/zero
-mkfs -t ext2 -i 1024 -b 1024 -F ext2_hda.img > /dev/zero
-fdisk ext2_hda.img <<EOF 
+/sbin/mkfs -t ext2 -i 1024 -b 1024 -F ext2_hda.img > /dev/zero
+/sbin/fdisk ext2_hda.img <<EOF 
 x
 c
 10
