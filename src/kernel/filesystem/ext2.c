@@ -861,39 +861,92 @@ vfs_node_t * get_ext2_root(ext2_fs_t * ext2fs, inode_t * inode) {
  * device_path: which device to use for sector read/write
  * mountpoint: where to mount ext2, we usually mount ext2 to root path "/"
  * */
+
+void print_superblock(superblock_t *sb) {
+    qemu_printf("\n\n    SUPERBLOCK   \n\n");
+
+
+    qemu_printf("total_inodes (32 bits, uint32_t): %d\n", sb->total_inodes);
+    qemu_printf("total_blocks (32 bits, uint32_t): %d\n", sb->total_blocks);
+    qemu_printf("su_blocks (32 bits, uint32_t): %d\n", sb->su_blocks);
+    qemu_printf("free_blocks (32 bits, uint32_t): %d\n", sb->free_blocks);
+    qemu_printf("free_inodes (32 bits, uint32_t): %d\n", sb->free_inodes);
+    qemu_printf("superblock_idx (32 bits, uint32_t): %d\n", sb->superblock_idx);
+    qemu_printf("log2block_size (32 bits, uint32_t): %d\n", sb->log2block_size);
+    qemu_printf("log2frag_size (32 bits, uint32_t): %d\n", sb->log2frag_size);
+    qemu_printf("blocks_per_group (32 bits, uint32_t): %d\n", sb->blocks_per_group);
+    qemu_printf("frags_per_group (32 bits, uint32_t): %d\n", sb->frags_per_group);
+    qemu_printf("inodes_per_group (32 bits, uint32_t): %d\n", sb->inodes_per_group);
+    qemu_printf("mtime (32 bits, uint32_t): %d\n", sb->mtime);
+    qemu_printf("wtime (32 bits, uint32_t): %d\n", sb->wtime);
+    qemu_printf("mount_count (16 bits, uint16_t): %d\n", sb->mount_count);
+    qemu_printf("mount_allowed_count (16 bits, uint16_t): %d\n", sb->mount_allowed_count);
+    qemu_printf("ext2_magic (16 bits, uint16_t): %d\n", sb->ext2_magic);
+    qemu_printf("fs_state (16 bits, uint16_t): %d\n", sb->fs_state);
+    qemu_printf("err (16 bits, uint16_t): %d\n", sb->err);
+    qemu_printf("minor (16 bits, uint16_t): %d\n", sb->minor);
+    qemu_printf("last_check (32 bits, uint32_t): %d\n", sb->last_check);
+    qemu_printf("interval (32 bits, uint32_t): %d\n", sb->interval);
+    qemu_printf("os_id (32 bits, uint32_t): %d\n", sb->os_id);
+    qemu_printf("major (32 bits, uint32_t): %d\n", sb->major);
+    qemu_printf("r_userid (16 bits, uint16_t): %d\n", sb->r_userid);
+    qemu_printf("r_groupid (16 bits, uint16_t): %d\n", sb->r_groupid);
+    qemu_printf("first_inode (32 bits, uint32_t): %d\n", sb->first_inode);
+    qemu_printf("inode_size (16 bits, uint16_t): %d\n", sb->inode_size);
+    qemu_printf("superblock_group (16 bits, uint16_t): %d\n", sb->superblock_group);
+    qemu_printf("optional_feature (32 bits, uint32_t): %d\n", sb->optional_feature);
+    qemu_printf("required_feature (32 bits, uint32_t): %d\n", sb->required_feature);
+    qemu_printf("readonly_feature (32 bits, uint32_t): %d\n", sb->readonly_feature);
+    qemu_printf("fs_id (16 bytes): %d\n", sb->fs_id);
+    qemu_printf("vol_name (16 bytes): %d\n", sb->vol_name);
+    qemu_printf("last_mount_path (64 bytes): %d\n", sb->last_mount_path);
+    qemu_printf("compression_method (32 bits, uint32_t): %d\n", sb->compression_method);
+    qemu_printf("file_pre_alloc_blocks (8 bits, uint8_t): %d\n", sb->file_pre_alloc_blocks);
+    qemu_printf("dir_pre_alloc_blocks (8 bits, uint8_t): %d\n", sb->dir_pre_alloc_blocks);
+    qemu_printf("journal_id (16 bytes): %d\n", sb->journal_id);
+    qemu_printf("journal_inode (32 bits, uint32_t): %d\n", sb->journal_inode);
+    qemu_printf("journal_device (32 bits, uint32_t): %d\n", sb->journal_device);
+    qemu_printf("orphan_head (32 bits, uint32_t): %d\n", sb->orphan_head);
+
+    qemu_printf("\n\n");
+}
+
 void ext2_init(char * device_path, char * mountpoint) {
     // First, we need to store some information about the ext2-formatted disk
-    ext2_fs_t * ext2fs = kcalloc(sizeof(ext2_fs_t), 1);
-    ext2fs->disk_device= file_open(device_path, 0);
-    ext2fs->sb = kmalloc(SUPERBLOCK_SIZE);
+    ext2_fs_t * ext2fs = kcalloc(sizeof(ext2_fs_t), 1); qemu_printf("fs alloc done");
+    ext2fs->disk_device= file_open(device_path, 0);     qemu_printf("fs dd done");
+    ext2fs->sb = kmalloc(SUPERBLOCK_SIZE);              qemu_printf("fs sb done");
 
     // Set a temporary block_size, because we need to call read_disk_block, which requires a block size
-    ext2fs->block_size = 1024;
+    ext2fs->block_size = 1024;                          qemu_printf("fs temp bs done");
 
     // Read supedisk_block from disk
-    read_disk_block(ext2fs, 1, (void*)ext2fs->sb);
+    read_disk_block(ext2fs, 1, (void*)ext2fs->sb);      qemu_printf("fs superblock read done");
+    print_superblock(ext2fs->sb);
     // Determine some helpful vars
-    ext2fs->block_size = (1024 << ext2fs->sb->log2block_size);
-    ext2fs->blocks_per_group = ext2fs->sb->blocks_per_group;
-    ext2fs->inodes_per_group = ext2fs->sb->inodes_per_group;
+    ext2fs->block_size = (1024 << ext2fs->sb->log2block_size);  qemu_printf("fs bs done");
+    ext2fs->blocks_per_group = ext2fs->sb->blocks_per_group;    qemu_printf("fs bpg done");
+    ext2fs->inodes_per_group = ext2fs->sb->inodes_per_group;    qemu_printf("fs ipg done");
 
-    ext2fs->total_groups = ext2fs->sb->total_blocks / ext2fs->blocks_per_group;
-    if(ext2fs->blocks_per_group * ext2fs->total_groups < ext2fs->total_groups)
-        ext2fs->total_groups++;
+    ext2fs->total_groups = ext2fs->sb->total_blocks / ext2fs->blocks_per_group; qemu_printf("fs tg done");
+    if(ext2fs->blocks_per_group * ext2fs->total_groups < ext2fs->total_groups) {
+        ext2fs->total_groups++;                                                 qemu_printf("fs if1 done");
+    }
 
     // Now that we know the total number of groups, we can read in the BGD(Block Group Descriptors), it's placed immediately after supedisk_block
     // But how many disk blocks the BGD take?
-    ext2fs->bgd_blocks = (ext2fs->total_groups * sizeof(bgd_t)) / ext2fs->block_size;
-    if(ext2fs->bgd_blocks * ext2fs->block_size < ext2fs->total_groups * sizeof(bgd_t))
-        ext2fs->bgd_blocks++;
+    ext2fs->bgd_blocks = (ext2fs->total_groups * sizeof(bgd_t)) / ext2fs->block_size;   qemu_printf("fs bgd done");
+    if(ext2fs->bgd_blocks * ext2fs->block_size < ext2fs->total_groups * sizeof(bgd_t)) {
+        ext2fs->bgd_blocks++;                                                           qemu_printf("fs if2 done");
+    }
 
-    ext2fs->bgds = kcalloc(sizeof(bgd_t), ext2fs->bgd_blocks * ext2fs->block_size);
+    ext2fs->bgds = kcalloc(sizeof(bgd_t), ext2fs->bgd_blocks * ext2fs->block_size); qemu_printf("fs bgds done");
     for(uint32_t i = 0; i < ext2fs->bgd_blocks; i++) {
-        read_disk_block(ext2fs, 2, (void*)ext2fs->bgds + i * ext2fs->block_size);
+        read_disk_block(ext2fs, 2, (void*)ext2fs->bgds + i * ext2fs->block_size);   qemu_printf("fs rdb_for (%d) done", i);
     }
 
     // Then, mount it onto the vfs tree
-    inode_t * root_inode = kcalloc(sizeof(inode_t), 1);
-    read_inode_metadata(ext2fs, root_inode, ROOT_INODE_NUMBER);
-    vfs_mount(mountpoint, get_ext2_root(ext2fs, root_inode));
+    inode_t * root_inode = kcalloc(sizeof(inode_t), 1);         qemu_printf("fs_root_inode done");
+    read_inode_metadata(ext2fs, root_inode, ROOT_INODE_NUMBER); qemu_printf("fs_inode_md done");
+    vfs_mount(mountpoint, get_ext2_root(ext2fs, root_inode));   qemu_printf("vfs_mount done");
 }

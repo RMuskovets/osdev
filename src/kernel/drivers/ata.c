@@ -325,9 +325,9 @@ void ata_init() {
     register_interrupt_handler(32 + 14, ata_handler);
 
     // Third, detect four ata devices
-    ata_device_detect(&primary_master, 1);
-    ata_device_detect(&primary_slave, 1);
-    ata_device_detect(&secondary_master, 0);
-    ata_device_detect(&secondary_slave, 0);
+    ata_device_detect(&primary_master, 1);  qemu_printf("primary master detected\n");
+    ata_device_detect(&primary_slave, 1);   qemu_printf("primary slave detected\n");
+    ata_device_detect(&secondary_master, 0);qemu_printf("secondary master detected\n");
+    ata_device_detect(&secondary_slave, 0); qemu_printf("secondary slave detected\n");
 
 }

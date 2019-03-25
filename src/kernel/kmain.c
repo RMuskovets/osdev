@@ -181,6 +181,15 @@ void completed_init() {
     display_all_window();
     video_memory_update(NULL, 0);
     print_windows_depth();
+
+    while (1) {
+        if (!is_updating_rtc()) {
+            draw_text(&canvas_bar, get_current_datetime_str(), 1, 115);
+            display_all_window();
+            video_memory_update(NULL, 0);
+        }
+    }
+
 #endif
 
 #if NETWORK_MODE

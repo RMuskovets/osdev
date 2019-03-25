@@ -34,6 +34,14 @@ extern uint32_t fill_color;
 
 #define TITLE_BAR_HEIGHT 23
 
+#define IS_MOUSE_EVENT(X) (X->msg_type==WINMSG_MOUSE)
+
+//typedef struct winmsg winmsg_t;
+
+//typedef ((void) (*) (winmsg_t)) msg_handler;
+
+//void empty_msg_handler(winmsg_t) {}
+
 typedef struct point {
     int x;
     int y;
@@ -89,6 +97,8 @@ typedef struct window {
 
     // This rect maintains the rectangle portion of this window that may need to be redrawn next
     rect_t intersection_rect;
+
+    //msg_handler handler;
 }window_t;
 
 /*

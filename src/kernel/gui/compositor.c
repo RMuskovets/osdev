@@ -720,7 +720,19 @@ void blend_window_rect(window_t * top_w, window_t * bottom_w) {
  * Maximize window
  * */
 void maximize_window(window_t * w) {
-    qemu_printf("Hi, this is not implemented yet\n");
+    //qemu_printf("Hi, this is not implemented yet\n");
+
+    if (w->is_maximized == 1) {
+        w->is_maximized = 0;
+        w->width = w->original_width;
+        w->height= w->original_height;
+    } else {
+        w->original_width = w->width;
+        w->original_height = w->height;
+        w->is_maximized = 1;
+        w->width = get_super_window()->width;
+        w->height = get_super_window()->height;
+    }
 }
 
 /*
