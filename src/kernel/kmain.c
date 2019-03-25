@@ -44,6 +44,8 @@ extern datetime_t current_datetime;
 #define GUI_MODE 0
 #define NETWORK_MODE 0
 
+void start_shell();
+
 void user_process2() {
     uint32_t lock = 0;
     while(1) {
@@ -83,15 +85,18 @@ int kmain(multiboot_info_t * mb_info) {
     syscall_init();
 
     // Set TSS stack so that when process return from usermode to kernel mode, the kernel have a ready-to-use stack
-    uint32_t esp;
-    asm volatile("mov %%esp, %0" : "=r"(esp));
-    tss_set_stack(0x10, esp);
+    //uint32_t esp;
+    //asm volatile("mov %%esp, %0" : "=r"(esp));
+    //tss_set_stack(0x10, esp);
 
     // Start the first process
-    create_process_from_routine(user_process, "user process");
+    //create_process_from_routine(user_process, "user process");
 
-    qemu_printf("\nDone!\n");
-    for(;;);
+    //qemu_printf("\nDone!\n");
+
+    clear();
+    start_shell();
+
     return 0;
 }
 
@@ -139,51 +144,7 @@ void completed_init() {
     qemu_printf("Initializing real time clock...\n");
     rtc_init();
     qemu_printf("Current date and time: %s\n", datetime_to_str(&current_datetime));
-
-// #if GUI_MODE
-//     vesa_init();
-//     compositor_init();
-//     mouse_init();
-
-//     // Terminal
-//     window_t * red_w = window_create(get_super_window(), 20, 300, 750, 450, WINDOW_NORMAL, "window_black");
-//     window_add_title_bar(red_w);
-//     window_add_close_button(red_w);
-//     window_add_minimize_button(red_w);
-//     window_add_maximize_button(red_w);
-//     canvas_t canvas_red = canvas_create(red_w->width, red_w->height, red_w->frame_buffer);
-//     set_font_color(VESA_COLOR_BLACK + 1);
-//     draw_text(&canvas_red, "Terminal", 1, 42);
-//     window_add_round_corner(red_w);
-//     blend_windows(red_w);
-
-//     // File Browser
-//     window_t * green_w = window_create(get_super_window(), 100, 100, 400, 400, WINDOW_NORMAL, "window_classic");
-//     window_add_title_bar(green_w);
-//     qemu_printf("Adding close buttons\n");
-//     window_add_close_button(green_w);
-//     qemu_printf("Adding minimize buttons\n");
-//     window_add_minimize_button(green_w);
-//     qemu_printf("Adding maximize buttons\n");
-//     window_add_maximize_button(green_w);
-//     canvas_t canvas_green = canvas_create(green_w->width, green_w->height, green_w->frame_buffer);
-//     set_font_color(VESA_COLOR_BLACK + 1);
-//     draw_text(&canvas_green, "File browser", 1, 19);
-//     window_add_round_corner(green_w);
-//     blend_windows(green_w);
-
-//     // Top desktop bar
-//     window_t * bar_w = window_create(get_super_window(), 0, 0, 1024, 25, WINDOW_DESKTOP_BAR, "desktop_bar");
-//     canvas_t canvas_bar = canvas_create(bar_w->width, bar_w->height, bar_w->frame_buffer);
-//     set_font_color(VESA_COLOR_BLACK+1);
-//     draw_text(&canvas_bar, get_current_datetime_str(), 1, 115);
-//     blend_windows(bar_w);
-//     display_all_window();
-//     video_memory_update(NULL, 0);
-//     print_windows_depth();
-// #endif
-
-#if NETWORK_MODE
+    #if NETWORK_MODE
     qemu_printf("Initializing network driver...\n");
     rtl8139_init();
     arp_init();
@@ -212,6 +173,12 @@ void completed_init() {
     while(gethostaddr(mac_addr) == 0);
     udp_send_packet(ip_addr, 1234, 1153, str, strlen(str));
     for(;;);
-#endif
+    #endif
+}
 
+void start_shell() {
+    for (;;) {
+        printf("> ");
+        
+    }
 }
