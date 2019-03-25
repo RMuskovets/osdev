@@ -19,9 +19,6 @@
 #include <usermode.h>
 #include <syscall.h>
 #include <elf_loader.h>
-#include <vesa.h>
-#include <bitmap.h>
-#include <compositor.h>
 #include <mouse.h>
 #include <keyboard.h>
 #include <font.h>
@@ -32,51 +29,71 @@
 #include <udp.h>
 #include <dhcp.h>
 #include <serial.h>
-#include <blend.h>
 #include <spinlock.h>
+#include <kmain.h>
+#include <string.h>
 
 
-extern uint8_t * bitmap;
 extern ata_dev_t primary_master;
 extern datetime_t current_datetime;
 
 #define MSIZE 48 * M
-#define GUI_MODE 0
 #define NETWORK_MODE 0
+#define PROMPT "~"
 
 void start_shell();
 
-void user_process2() {
-    uint32_t lock = 0;
-    while(1) {
-        for(int i = 0; i < 10000; i++) {
-            for(int j= 0; j < 2000; j++) {
+char *current_directory;
+int cwd_len;
 
-            }
-        }
-        spinlock_lock(&lock);
-        qemu_printf("hi there2\n");
-        spinlock_unlock(&lock);
+char *keyboard_input;
+int kbdi_len;
+
+int shift = 0;
+
+void on_keypress(int kc, char c) {
+
+    if (kc == RSHIFT || kc == LSHIFT) {
+        shift = 1;
     }
+
+    if (shift == 1) {
+        if (c == 'q') c = 'Q';
+        if (c == 'w') c = 'W';
+        if (c == 'e') c = 'E';
+        if (c == 'r') c = 'R';
+        if (c == 't') c = 'T';
+        if (c == 'y') c = 'Y';
+        if (c == 'u') c = 'U';
+        if (c == 'i') c = 'I';
+        if (c == 'o') c = 'O';
+        if (c == 'p') c = 'P';
+
+        if (c == 'a') c = 'A';
+        if (c == 's') c = 'S';
+        if (c == 'd') c = 'D';
+        if (c == 'f') c = 'F';
+        if (c == 'g') c = 'G';
+        if (c == 'h') c = 'H';
+        if (c == 'j') c = 'J';
+        if (c == 'k') c = 'K';
+        if (c == 'l') c = 'L';
+
+        if (c == 'z') c = 'Z';
+        if (c == 'x') c = 'X';
+        if (c == 'c') c = 'C';
+        if (c == 'v') c = 'V';
+        if (c == 'b') c = 'B';
+        if (c == 'n') c = 'N';
+        if (c == 'm') c = 'M';
+
+        shift = 0;
+    }
+
+    printf((const char*) c);
+    strcat(keyboard_input, (char*) c);
+    kbdi_len++;
 }
-
-void user_process() {
-    uint32_t lock = 0;
-    for(int i = 0; i < 20; i++) {
-        create_process_from_routine(user_process2, "user process2");
-    }
-    while(1) {
-        for(int i = 0; i < 10000; i++) {
-            for(int j= 0; j < 2000; j++) {
-
-            }
-        }
-        spinlock_lock(&lock);
-        qemu_printf("hi there\n");
-        spinlock_unlock(&lock);
-    }
-}
-
 
 int kmain(multiboot_info_t * mb_info) {
     completed_init();
@@ -178,7 +195,9 @@ void completed_init() {
 
 void start_shell() {
     for (;;) {
-        printf("> ");
-        
+        printf(current_directory);
+        printf(" ");
+        printf(PROMPT);
+        printf(" ");
     }
 }
