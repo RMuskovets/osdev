@@ -41,7 +41,7 @@ extern ata_dev_t primary_master;
 extern datetime_t current_datetime;
 
 #define MSIZE 48 * M
-#define GUI_MODE 0
+#define GUI_MODE 1
 #define NETWORK_MODE 0
 
 void user_process2() {
