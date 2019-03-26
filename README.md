@@ -1,15 +1,11 @@
-# Cool OS
-An operating system based on <a href = "http://www.osdever.net/bkerndev/Docs/title.htm"> Brans' Kernel Development Tutorial</a>  
-<a href = "https://www.youtube.com/watch?v=846d4m0wHQo"> Click me to see the video demo! </a>  
-
+# ROS
+An OS created using [OSdev resources](wiki.osdev.org/Expanded_Main_Page), and szhou42's "skeleton"  
+  
 Future goals:
-1. Userspace, Port Newlib, Multi-process, multi-thread, IPC, write syscalls, etc(process related stuff)
-2. Implement a hobby level TCP/IP stack(Ethernet/ARP/DHCP/IP/UDP/TCP with congestion control and everything..)
-3. Graphical User Interface(C/S GUI Server, Composite via IPC, now the GUI is in kernel)
-4. Write three GUI user apps(Shell, TCP ChatRoom, Text Editor)
+1. Userspace, Port Newlib, Multi-process, multi-thread, IPC, write syscalls, etc(process related stuff)        [WIP]
+2. Implement a hobby level TCP/IP stack(Ethernet/ARP/DHCP/IP/UDP/TCP with congestion control and everything..) [WIP]
 
 # Screenshots  
-![Alt text](/os_screenshots/ss12.png?raw=true "ss12")
 ![Alt text](/os_screenshots/ss0.png?raw=true "ss0")
 ![Alt text](/os_screenshots/ss1.png?raw=true "ss1")
 
@@ -78,14 +74,8 @@ And then choose one of the following simulator to boot cool os. QEMU is more rec
 &#160; &#160; &#160; &#160;0 PCI Enumerate,R/W     [✔]  
 &#160; &#160; &#160; &#160;1 ATA/DMA Driver        [✔]  
 &#160; &#160; &#160; &#160;2 Ext2 Filesystem       [✔]  
-&#160; &#160; &#160; &#160;3 Virtual Filesystem    [✔]  
-
-#### Graphical Interface  
-&#160; &#160; &#160; &#160;0 vesa driver, 1024 * 768 color(32-bit color)，framebuffer mode                                              [✔]  
-&#160; &#160; &#160; &#160;1 Milestone(try loading and showing a wallpaper from hardisk!)                                               [✔]  
-&#160; &#160; &#160; &#160;2 Windows compositor, support fonts, buttons,and etc                                                         [✔]  
-&#160; &#160; &#160; &#160;3 Write a shell                                                                                              []  
-&#160; &#160; &#160; &#160;4 Write a file browser                                                                                       []  
+&#160; &#160; &#160; &#160;3 BMFS Filesystem       []  
+&#160; &#160; &#160; &#160;4 Virtual Filesystem    [✔]  
 
 #### Miscellaneous  
 &#160; &#160; &#160; &#160;1 Usermode                                                               [✔]  
