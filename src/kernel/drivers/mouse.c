@@ -1,9 +1,9 @@
 #include <mouse.h>
 #include <pic.h>
-#include <vesa.h>
-#include <compositor.h>
-#include <draw.h>
-#include <bitmap.h>
+//#include <vesa.h>
+//#include <compositor.h>
+//#include <draw.h>
+//#include <bitmap.h>
 #include <serial.h>
 #include <math.h>
 
@@ -13,16 +13,16 @@ int screen_width;
 int screen_height;
 
 // The rectangle that current mouse is going to be in, this would save that region's original pixels
-rect_region_t next_mouse_region;
+//rect_region_t next_mouse_region;
 
 // Current mouse region, same thing as next mouse_region, except that this saves the mouse icon
-rect_region_t current_mouse_region;
+//rect_region_t current_mouse_region;
 
 // Mouse icon
-bitmap_t * cursor_icon;
+//bitmap_t * cursor_icon;
 
 // For updating cursor
-rect_t rects[2];
+//rect_t rects[2];
 
 // Mouse button state
 uint8_t prev_button_state[3];
@@ -57,15 +57,15 @@ void mouse_handler(register_t * regs)
     qemu_printf("Mouse interrupt fired\n");
     static uint8_t mouse_cycle = 0;
     static char mouse_byte[3];
-    winmsg_t msg;
+    //winmsg_t msg;
     // Cursor width and height can change, depending on its position(like when the half of the cursor is outside of screen)
     int cursor_curr_width = CURSOR_WIDTH;
     int cursor_curr_height = CURSOR_HEIGHT;
 
     // Fill message
-    msg.msg_type = WINMSG_MOUSE;
-    msg.cursor_x = mouse_x;
-    msg.cursor_y = mouse_y;
+    //msg.msg_type = WINMSG_MOUSE;
+    //msg.cursor_x = mouse_x;
+    //msg.cursor_y = mouse_y;
 
     switch(mouse_cycle) {
         case 0:
@@ -112,12 +112,12 @@ void mouse_handler(register_t * regs)
                 mouse_y = screen_height - 1;
 
             // Repaint previous mouse region
-            repaint(next_mouse_region.r);
-            rects[0] = next_mouse_region.r;
+            //repaint(next_mouse_region.r);
+            //rects[0] = next_mouse_region.r;
 
             // Save current mouse rect region
-            next_mouse_region.r.x = mouse_x;
-            next_mouse_region.r.y = mouse_y;
+            //next_mouse_region.r.x = mouse_x;
+            //next_mouse_region.r.y = mouse_y;
 
             // Adjust cursor size
             if(mouse_x + CURSOR_WIDTH > screen_width - 1) {
@@ -128,52 +128,52 @@ void mouse_handler(register_t * regs)
                 cursor_curr_height = screen_height - mouse_y;
             }
 
-            next_mouse_region.r.width = cursor_curr_width;
-            next_mouse_region.r.height = cursor_curr_height;
-            current_mouse_region.r = next_mouse_region.r;
-            memsetdw(next_mouse_region.region, 0x0000ff00, CURSOR_WIDTH * CURSOR_HEIGHT);
+            //next_mouse_region.r.width = cursor_curr_width;
+            //next_mouse_region.r.height = cursor_curr_height;
+            //current_mouse_region.r = next_mouse_region.r;
+            //memsetdw(next_mouse_region.region, 0x0000ff00, CURSOR_WIDTH * CURSOR_HEIGHT);
 
             // Repaint current mouse region
-            repaint(next_mouse_region.r);
+            //repaint(next_mouse_region.r);
 
             // Actually draw the mouse in here
-            draw_mouse();
+            //draw_mouse();
 
             // Only update the two rectangle video memory
-            rects[1] = current_mouse_region.r;
-            video_memory_update(rects, 2);
+            //rects[1] = current_mouse_region.r;
+            //video_memory_update(rects, 2);
             // May be send a mouse move message to windows in here, if needed.
 
-            msg.sub_type = WINMSG_MOUSE_MOVE;
-            msg.change_x = mouse_byte[1];
-            msg.change_y = -mouse_byte[2];
+            //msg.sub_type = WINMSG_MOUSE_MOVE;
+            //msg.change_x = mouse_byte[1];
+            //msg.change_y = -mouse_byte[2];
             //qemu_printf("x change = %d y change = %d\n", msg.change_x, msg.change_y);
             mouse_cycle = 0;
             break;
     }
     if(mouse_cycle == 0) {
         if(left_button_down()) {
-            msg.sub_type = WINMSG_MOUSE_LEFT_BUTTONDOWN;
+            //msg.sub_type = WINMSG_MOUSE_LEFT_BUTTONDOWN;
             //qemu_printf("left button down\n");
             print_button_state();
         }
         if(left_button_up()) {
-            msg.sub_type = WINMSG_MOUSE_LEFT_BUTTONUP;
+            //msg.sub_type = WINMSG_MOUSE_LEFT_BUTTONUP;
             //qemu_printf("left button up\n");
             print_button_state();
         }
         if(right_button_down()) {
-            msg.sub_type = WINMSG_MOUSE_RIGHT_BUTTONDOWN;
+            //msg.sub_type = WINMSG_MOUSE_RIGHT_BUTTONDOWN;
             //qemu_printf("right button down\n");
             print_button_state();
         }
         if(right_button_up()) {
-            msg.sub_type = WINMSG_MOUSE_RIGHT_BUTTONUP;
+            //msg.sub_type = WINMSG_MOUSE_RIGHT_BUTTONUP;
             //qemu_printf("right button up\n");
             print_button_state();
         }
-        msg.window = query_window_by_point(mouse_x, mouse_y);
-        window_message_handler(&msg);
+        //msg.window = query_window_by_point(mouse_x, mouse_y);
+        //window_message_handler(&msg);
         // Previous state becomes current state
         memcpy(prev_button_state, curr_button_state, 3);
         // Current state becomes empty
@@ -198,8 +198,8 @@ uint8_t mouse_read()
 }
 
 void draw_mouse() {
-    set_fill_color(VESA_COLOR_BLUE);
-    draw_rect_clip_pixels(get_screen_canvas(), &current_mouse_region, CURSOR_WIDTH);
+    //set_fill_color(VESA_COLOR_BLUE);
+    //draw_rect_clip_pixels(get_screen_canvas(), &current_mouse_region, CURSOR_WIDTH);
 #if 0
     if(is_moving()) {
         point_t p = get_mouse_position_before_move();
@@ -240,30 +240,30 @@ void mouse_wait(uint8_t a_type) {
  * */
 void mouse_init() {
     // Screen width and height
-    screen_width = vesa_get_resolution_x();
-    screen_height = vesa_get_resolution_y();
+    //screen_width = vesa_get_resolution_x();
+    //screen_height = vesa_get_resolution_y();
 
     // Initial position of mouse
     //mouse_x = screen_width / 2;
     //mouse_y = screen_height / 2;
-    mouse_x = 20;
-    mouse_y = 20;
+    //mouse_x = 20;
+    //mouse_y = 20;
 
     // Save initial mouse rect region
-    next_mouse_region.r.x = mouse_x;
-    next_mouse_region.r.y = mouse_y;
-    next_mouse_region.r.width = CURSOR_WIDTH;
-    next_mouse_region.r.height = CURSOR_HEIGHT;
-    next_mouse_region.region = kmalloc(CURSOR_WIDTH * CURSOR_HEIGHT * 4);
-    memsetdw(next_mouse_region.region, 0x0000ff00, CURSOR_WIDTH * CURSOR_HEIGHT);
+    //next_mouse_region.r.x = mouse_x;
+    //next_mouse_region.r.y = mouse_y;
+    //next_mouse_region.r.width = CURSOR_WIDTH;
+    //next_mouse_region.r.height = CURSOR_HEIGHT;
+    //next_mouse_region.region = kmalloc(CURSOR_WIDTH * CURSOR_HEIGHT * 4);
+    //memsetdw(next_mouse_region.region, 0x0000ff00, CURSOR_WIDTH * CURSOR_HEIGHT);
     // Cursoe icon
-    cursor_icon = bitmap_create("/cursor.bmp");
-    current_mouse_region.r = next_mouse_region.r;
-    bitmap_to_framebuffer2(cursor_icon, current_mouse_region.region);
+    //cursor_icon = bitmap_create("/cursor.bmp");
+    //current_mouse_region.r = next_mouse_region.r;
+    //bitmap_to_framebuffer2(cursor_icon, current_mouse_region.region);
     // Draw the mouse
-    rects[0] = next_mouse_region.r;
+    //rects[0] = next_mouse_region.r;
     draw_mouse();
-    video_memory_update(rects, 1);
+    //video_memory_update(rects, 1);
 
     uint8_t _status;  //unsigned char
     //Enable the auxiliary mouse device

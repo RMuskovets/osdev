@@ -877,7 +877,11 @@ void ext2_init(char * device_path, char * mountpoint) {
     ext2fs->blocks_per_group = ext2fs->sb->blocks_per_group;
     ext2fs->inodes_per_group = ext2fs->sb->inodes_per_group;
 
+    if (ext2fs->inodes_per_group == 0) ext2fs->inodes_per_group = 1;
+    if (ext2fs->blocks_per_group == 0) ext2fs->blocks_per_group = 1;
+
     ext2fs->total_groups = ext2fs->sb->total_blocks / ext2fs->blocks_per_group;
+    if (ext2fs->total_groups == 0) ext2fs->total_groups = 1;
     if(ext2fs->blocks_per_group * ext2fs->total_groups < ext2fs->total_groups)
         ext2fs->total_groups++;
 

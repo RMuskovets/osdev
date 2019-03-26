@@ -42,6 +42,7 @@ extern datetime_t current_datetime;
 #define PROMPT "~"
 
 void start_shell();
+void completed_init();
 
 char *current_directory;
 int cwd_len;
@@ -96,6 +97,10 @@ void on_keypress(int kc, char c) {
 }
 
 int kmain(multiboot_info_t * mb_info) {
+
+    current_directory = "/";
+    cwd_len = strlen(current_directory);
+
     completed_init();
 
     process_init();

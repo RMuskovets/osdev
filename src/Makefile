@@ -1,5 +1,5 @@
 # Setup compiler name and flags
-CC=i686-pc-btos-gcc
+CC=i686-elf-gcc
 CFLAGS=-Wall -Wno-int-conversion -fstrength-reduce -fomit-frame-pointer -finline-functions -nostdlib -ffreestanding -I./include -std=gnu99 -g -ggdb -c
 NASM=nasm
 NASMFLAGS=-f elf32 -O0
