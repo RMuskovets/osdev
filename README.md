@@ -1,4 +1,4 @@
-# Cool OS
+# ROS
 An operating system based on <a href = "http://www.osdever.net/bkerndev/Docs/title.htm"> Brans' Kernel Development Tutorial</a>  
 <a href = "https://www.youtube.com/watch?v=846d4m0wHQo"> Click me to see the video demo! </a>  
 
@@ -78,7 +78,8 @@ And then choose one of the following simulator to boot cool os. QEMU is more rec
 &#160; &#160; &#160; &#160;0 PCI Enumerate,R/W     [✔]  
 &#160; &#160; &#160; &#160;1 ATA/DMA Driver        [✔]  
 &#160; &#160; &#160; &#160;2 Ext2 Filesystem       [✔]  
-&#160; &#160; &#160; &#160;3 Virtual Filesystem    [✔]  
+&#160; &#160; &#160; &#160;3 BMFS Filesystem       []
+&#160; &#160; &#160; &#160;4 Virtual Filesystem    [✔]  
 
 #### Graphical Interface  
 &#160; &#160; &#160; &#160;0 vesa driver, 1024 * 768 color(32-bit color)，framebuffer mode                                              [✔]  
